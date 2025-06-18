@@ -31,6 +31,19 @@ body {
   display: flex;
   flex-direction: column;
 }
+
+.text-primary {
+  color: var(--primary);
+}
+
+.text-foreground {
+  color: var(--foreground);
+}
+
+.text-dark {
+  color: var(--background);
+}
+
 .bg-primary {
   background-color: var(--primary);
 }
@@ -45,9 +58,8 @@ body {
   width: 100vw;
   top: 0;
   left: 0;
-  padding: 10px 20px;
-  background: var(--secondary);
-  z-index: 99;
+  padding: 0;
+  z-index: 10;
 }
 
 .cart-index {
@@ -96,4 +108,29 @@ body {
   position: relative;
   font-size: 1.5rem;
   color: var(--foreground);
+}
+
+.mobile-menu {
+  display: flex;
+  flex-direction: column;
+}
+
+.mobile-view {
+  display: none;
+}
+
+@media (max-width: 600px) {
+  .product-grid {
+    max-width: 300px;
+    grid-template-columns: 100%;
+  }
+  .menu-row {
+    display: none;
+  }
+  .store-title {
+    display: none;
+  }
+  .mobile-view {
+    display: flex;
+  }
 }

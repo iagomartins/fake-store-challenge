@@ -1,4 +1,4 @@
-type User = {
+type Customer = {
     id: number;
     email: string;
     password: string;
@@ -9,4 +9,4 @@ type User = {
     updatedAt: string;
 };
 
-export default User;
+export default Customer;

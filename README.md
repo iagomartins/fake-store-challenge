@@ -36,7 +36,9 @@ Recursos do Next.js:
 - [Next.js Documentation](https://nextjs.org/docs) - Documentação.
 - [Learn Next.js](https://nextjs.org/learn) - Dicas para utilização do Next.js.
 
-## Link do Vercel
+## Link do Vercel (Deploy)
+
+https://fake-store-ihebdjnqn-iago-augusto-alves-martins-projects.vercel.app/
 
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 

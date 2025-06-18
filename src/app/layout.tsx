@@ -4,6 +4,8 @@ import "./globals.css";
 import { TanstackProvider } from "@/context/TanstackProvider";
 import { CartProvider } from "@/context/Cart";
 
+export const dynamic = 'force-dynamic';
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],

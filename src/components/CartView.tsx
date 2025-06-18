@@ -9,20 +9,26 @@ import {
   DialogTitle,
 } from "@headlessui/react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCartShopping } from "@fortawesome/free-solid-svg-icons";
 
 export default function CartView() {
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
   const { cart, subtotal, removeFromCart } = useCart();
 
   return (
     <>
       <span
         onClick={() => setOpen(true)}
-        className="cursor-pointer rounded-md bg-gray-950/5 px-2.5 py-1.5 text-sm font-semibold text-gray-900 hover:bg-gray-950/10"
+        className="cursor-pointer rounded-md  bg-primary px-2.5 py-1.5 text-sm font-semibold text-foreground hover:bg-gray-950/10"
       >
-        Carrinho
+        <FontAwesomeIcon icon={faCartShopping} />
       </span>
-      <Dialog open={open} onClose={setOpen} className="cart-index relative z-10">
+      <Dialog
+        open={open}
+        onClose={setOpen}
+        className="cart-index relative z-10"
+      >
         <DialogBackdrop
           transition
           className="fixed inset-0 bg-gray-500/75 transition-opacity duration-500 ease-in-out data-closed:opacity-0"
@@ -60,12 +66,12 @@ export default function CartView() {
                           role="list"
                           className="-my-6 divide-y divide-gray-200"
                         >
-                          {cart.map((product) => (
-                            <li key={product.id} className="flex py-6">
+                          {cart.map((item) => (
+                            <li key={item.product.id} className="flex py-6">
                               <div className="size-24 shrink-0 overflow-hidden rounded-md border border-gray-200">
                                 <img
-                                  alt={product.description}
-                                  src={product.images[0]}
+                                  alt={item.product.description}
+                                  src={item.product.images[0]}
                                   className="size-full object-cover"
                                 />
                               </div>
@@ -73,17 +79,18 @@ export default function CartView() {
                               <div className="ml-4 flex flex-1 flex-col">
                                 <div>
                                   <div className="flex justify-between text-base font-medium text-gray-900">
-                                    <h3>{product.title}</h3>
-                                    <p className="ml-4">{product.price}</p>
+                                    <h3>{item.product.title}</h3>
+                                    <p className="ml-4">{item.product.price}</p>
                                   </div>
                                 </div>
                                 <div className="flex flex-1 items-end justify-between text-sm">
+                                  <p className="text-gray-500">Qty {item.quantity}</p>
                                   <div className="flex">
                                     <span
                                       onClick={() => {
-                                        removeFromCart(product);
+                                        removeFromCart(item);
                                       }}
-                                      className="cursor-pointer font-medium text-indigo-600 hover:text-indigo-500"
+                                      className="cursor-pointer font-medium text-primary hover:text-indigo-500"
                                     >
                                       Remove
                                     </span>
@@ -108,7 +115,7 @@ export default function CartView() {
                     <div className="mt-6">
                       <a
                         href="#"
-                        className="flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-xs hover:bg-indigo-700"
+                        className="flex items-center justify-center rounded-md border border-transparent bg-primary px-6 py-3 text-base font-medium text-white shadow-xs hover:bg-indigo-700"
                       >
                         Checkout
                       </a>
@@ -118,7 +125,7 @@ export default function CartView() {
                         or{" "}
                         <span
                           onClick={() => setOpen(false)}
-                          className="cursor-pointer font-medium text-indigo-600 hover:text-indigo-500"
+                          className="cursor-pointer font-medium text-primary hover:text-indigo-500"
                         >
                           Continue Shopping
                           <span aria-hidden="true"> &rarr;</span>

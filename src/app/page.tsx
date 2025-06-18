@@ -4,14 +4,36 @@ import { useEffect, useState } from "react";
 import { useRouter } from 'next/navigation';
 import axios from "axios";
 import { ToastContainer, toast, Bounce } from 'react-toastify';
-import User from "@/types/User";
+import Customer from "@/types/Customer";
+import { useCart } from "@/context/Cart";
+import { useQueryClient, useQuery } from "@tanstack/react-query";
+
+export const dynamic = 'force-dynamic';
 
 function Body() {
   const router = useRouter();
-  const [users] = useState<User[]>([]);
+  const [users] = useState<Customer[]>([]);
   const [usernameValue, setUsernameValue] = useState<string>("");
   const [passwordValue, setPasswordValue] = useState<string>("");
   const [loading, setLoading] = useState(false);
+  const { clearCart } = useCart();
+  const queryClient = useQueryClient();
+    const user: Customer = {
+    id: 0,
+    email: "",
+    password: "",
+    name: "",
+    role: "",
+    avatar: "",
+    creationAt: "",
+    updatedAt: ""
+  };
+  useQuery({
+    queryKey: ["user"],
+    queryFn: () => {
+      return user;
+    },
+  });
 
   function handleUsernameChange(
     event: React.ChangeEvent<HTMLInputElement>
@@ -25,22 +47,15 @@ function Body() {
     setPasswordValue(event.target.value);
   }
 
-  function submitLogin(): User {
+  function SubmitLogin(): Customer {
     setLoading(true);
     const user = users.find((e) => {
       return e.email === usernameValue && e.password === passwordValue;
     });
 
     if (user?.id) {
-      sessionStorage.setItem('id', user.id.toString());
-      sessionStorage.setItem('email', user.email);
-      sessionStorage.setItem('password', user.password);
-      sessionStorage.setItem('name', user.name);
-      sessionStorage.setItem('role', user.role);
-      sessionStorage.setItem('avatar', user.avatar);
-      sessionStorage.setItem('creationAt', user.creationAt);
-      sessionStorage.setItem('updatedAt', user.updatedAt);
       router.push('/gallery');
+      queryClient.setQueryData(['user'], user);
       return user;
     }
     else {
@@ -71,7 +86,7 @@ function Body() {
 
   async function fetchUsersData() {
     await axios
-      .get<User[]>(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/users`)
+      .get<Customer[]>(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/users`)
       .then(({ data }) => {
         data.forEach((e) => {
           users.push(e);
@@ -80,6 +95,7 @@ function Body() {
   }
 
   useEffect(() => {
+    clearCart();
     fetchUsersData();
   }, []);
 
@@ -167,8 +183,8 @@ function Body() {
 
           <div>
             <span
-              className="flex w-full justify-center rounded-md bg-primary px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-              onClick={submitLogin}
+              className="cursor-pointer flex w-full justify-center rounded-md bg-primary px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+              onClick={SubmitLogin}
             >
               Log in
             </span>

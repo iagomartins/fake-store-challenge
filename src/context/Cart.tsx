@@ -1,13 +1,15 @@
 "use client";
 import React, { createContext, useContext, useState } from "react";
+import CartItem from "@/types/CartItem";
 import Product from "@/types/Product";
-import { ToastContainer, toast, Bounce } from "react-toastify";
+import { toast, Bounce } from "react-toastify";
 
 interface CartContextType {
-  cart: Product[];
+  cart: CartItem[];
   subtotal: number;
   addToCart: (item: Product) => void;
-  removeFromCart: (item: Product) => void;
+  removeFromCart: (item: CartItem) => void;
+  clearCart: () => void;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -15,11 +17,24 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 export const CartProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const [cart, setCart] = useState<Product[]>([]);
+  const [cart, setCart] = useState<CartItem[]>([]);
   const [subtotal, setSubtotal] = useState(0);
 
   const addToCart = (item: Product) => {
-    setCart((prev) => [...prev, { ...item }]);
+    setCart((prev) => {
+      const hasItem = prev.filter((e) => e.product.id === item.id).length > 0;
+      let ret = prev.find(e => e.product.id === item.id);
+      if (hasItem && ret) {
+        const quantity = ret.quantity + 0.5;
+        ret.quantity = quantity;
+        console.log(ret.quantity);
+        return [...prev.filter(e => e.product.id !== item.id), ret];
+      }
+      else {
+        ret = { product: item, quantity: 1 };
+        return [...prev, ret];
+      }
+    });
     setSubtotal((prev) => prev + item.price);
     toast.success("Produto adicionado ao carrinho!", {
       position: "top-right",
@@ -34,26 +49,18 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({
     });
   };
 
-  const removeFromCart = (item: Product) => {
-    setCart((prev) => prev.filter((p: Product) => p.id !== item.id));
-    setSubtotal((prev) => prev - item.price);
+  const removeFromCart = (item: CartItem) => {
+    setCart((prev) => prev.filter((p: CartItem) => p.product.id !== item.product.id));
+    setSubtotal((prev) => prev - item.product.price * item.quantity);
   };
 
+  const clearCart = () => {
+    setCart([]);
+    setSubtotal(0);
+  }
+
   return (
-    <CartContext.Provider value={{ cart, subtotal, addToCart, removeFromCart }}>
-      <ToastContainer
-        position="top-right"
-        autoClose={3000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss={false}
-        draggable={false}
-        pauseOnHover={false}
-        theme="light"
-        transition={Bounce}
-      />
+    <CartContext.Provider value={{ cart, subtotal, addToCart, removeFromCart, clearCart }}>
       {children}
     </CartContext.Provider>
   );
