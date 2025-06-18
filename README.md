@@ -36,6 +36,11 @@ Recursos do Next.js:
 - [Next.js Documentation](https://nextjs.org/docs) - Documentação.
 - [Learn Next.js](https://nextjs.org/learn) - Dicas para utilização do Next.js.
 
+## Usuário teste
+
+- Email: john@mail.com
+- Senha: changeme
+
 ## Link do Vercel (Deploy)
 
 https://fake-store-ihebdjnqn-iago-augusto-alves-martins-projects.vercel.app/
