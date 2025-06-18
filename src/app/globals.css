@@ -3,6 +3,8 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --primary: #2e82d5;
+  --secondary: #404040bd;
 }
 
 @theme inline {
@@ -23,6 +25,59 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+}
+.bg-primary {
+  background-color: var(--primary);
+}
+
+.text-adjustment {
+  display: flex;
+  align-items: center;
+}
+
+.main-header {
+  position: fixed;
+  width: 100vw;
+  top: 0;
+  left: 0;
+  padding: 10px 20px;
+  background: var(--secondary);
+  z-index: 99;
+}
+
+.cart-index {
+  z-index: 999;
+}
+
+.menu-row {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: fit-content;
+}
+
+.menu-item {
+  padding: 15px;
+}
+
+.product-grid {
+  display: grid;
+  grid-gap: 20px;
+  grid-template-columns: 300px 300px 300px;
+}
+
+.elipsis-text {
+  text-wrap-mode: nowrap;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  position: relative;
+  display: block;
+  overflow: hidden;
 }
 
 .ofuscate-background {

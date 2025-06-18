@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useRouter } from 'next/navigation';
 import axios from "axios";
@@ -98,10 +99,12 @@ function Body() {
         theme="light"
       />
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-        <img
+        <Image
           alt="Fake Store E-Commerce"
           src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=600"
           className="mx-auto h-10 w-auto"
+          width={100}
+          height={100}
         />
         <h2 className="mt-10 text-center text-2xl/9 font-bold tracking-tight text-gray-100">
           Autenticação de usuário
@@ -164,7 +167,7 @@ function Body() {
 
           <div>
             <span
-              className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+              className="flex w-full justify-center rounded-md bg-primary px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
               onClick={submitLogin}
             >
               Log in
