@@ -10,7 +10,7 @@ import Category from "@/types/Category";
 import Link from "next/link";
 import { useCart } from "@/context/Cart";
 
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
 interface ProductPageProps {
   params: Promise<{ id: string }>;
@@ -50,20 +50,21 @@ function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
 }
 
-const ProductPage: React.FC<ProductPageProps> = ({ params }: ProductPageProps) => {
+const ProductPage: React.FC<ProductPageProps> = ({
+  params,
+}: ProductPageProps) => {
   const { id } = use(params);
   const { addToCart } = useCart();
   const [product, setProduct] = useState(baseProduct);
   const [selectedSize, setSelectedSize] = useState(["P"]);
   const [loading, setLoading] = useState(false);
   const [breadcrumb] = useState([crumb]);
+  const [selectedImage, setSelectedImage] = useState(0);
 
   useEffect(() => {
     setLoading(true);
     axios
-      .get<Product>(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/v1/products/${id}`
-      )
+      .get<Product>(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/products/${id}`)
       .then(({ data }) => {
         setProduct(data);
         setLoading(false);
@@ -71,180 +72,288 @@ const ProductPage: React.FC<ProductPageProps> = ({ params }: ProductPageProps) =
   }, []);
 
   return (
-    <Toast>
-      {loading && (
-        <div className="ofuscate-background">
-          <div className="loading-spinner">Carregando...</div>
-        </div>
-      )}
-      <header className="main-header flex gap-[24px] flex-wrap items-center justify-center">
-        <Header emitCategory={() => 0} showMenu={false} />
-      </header>
-      <div className="bg-white pt-25">
-        <div className="pt-6">
-          <nav aria-label="Breadcrumb">
-            <ol
-              role="list"
-              className="mx-auto flex max-w-2xl items-center space-x-2 px-4 sm:px-6 lg:max-w-7xl lg:px-8"
-            >
-              {breadcrumb.map((b, index) => (
-                <li key={index}>
-                  <div className="flex items-center">
-                    <Link
-                      href={b.href}
-                      className="mr-2 text-sm font-medium text-gray-900"
-                    >
-                      {b.name || ''}
-                    </Link>
-                    <svg
-                      fill="currentColor"
-                      width={16}
-                      height={20}
-                      viewBox="0 0 16 20"
-                      aria-hidden="true"
-                      className="h-5 w-4 text-gray-300"
-                    >
-                      <path d="M5.697 4.34L8.98 16.532h1.327L7.025 4.341H5.697z" />
-                    </svg>
-                  </div>
-                </li>
-              ))}
-              <li className="text-sm">
-                <span
-                  aria-current="page"
-                  className="font-medium text-gray-500 hover:text-gray-600"
-                >
-                  {product.title}
-                </span>
-              </li>
-            </ol>
-          </nav>
-
-          {/* Image gallery */}
-          <div className="mx-auto mt-6 max-w-2xl sm:px-6 lg:grid lg:max-w-7xl lg:grid-cols-3 lg:gap-8 lg:px-8">
-            {product.images.map((i, index) => (
-              <img
-                alt={product.description}
-                src={i}
-                className="row-span-2 aspect-3/4 size-full rounded-lg object-cover max-lg:hidden"
-                key={index}
-              />
-            ))}
+    <div className="min-h-screen bg-gray-50">
+      <Toast>
+        {loading && (
+          <div className="ofuscate-background">
+            <div className="loading-spinner">Carregando...</div>
           </div>
-          <div className="mx-auto mt-6 flex mobile-view">
-              <img
-                alt={product.description}
-                src={product.images[0]}
-                className="row-span-2 aspect-3/4 size-full rounded-lg object-cover"
-              />
-          </div>
+        )}
 
-          {/* Product info */}
-          <div className="mx-auto max-w-2xl px-4 pt-10 pb-16 sm:px-6 lg:grid lg:max-w-7xl lg:grid-cols-3 lg:grid-rows-[auto_auto_1fr] lg:gap-x-8 lg:px-8 lg:pt-16 lg:pb-24">
-            <div className="lg:col-span-2 lg:border-r lg:border-gray-200 lg:pr-8">
-              <h1 className="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">
-                {product.title}
-              </h1>
-            </div>
+        <header className="main-header">
+          <Header emitCategory={() => 0} showMenu={false} />
+        </header>
 
-            {/* Options */}
-            <div className="mt-4 lg:row-span-3 lg:mt-0">
-              <h2 className="sr-only">Informações</h2>
-              <p className="text-3xl tracking-tight text-gray-900">
-                R$ {product.price}
-              </p>
+        <main className="pt-24">
+          <div className="bg-white">
+            <div className="pt-6">
+              {/* Breadcrumb */}
+              <nav
+                aria-label="Breadcrumb"
+                className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8"
+              >
+                <ol className="flex items-center space-x-2 text-sm">
+                  {breadcrumb.map((b, index) => (
+                    <li key={index} className="flex items-center">
+                      <Link
+                        href={b.href}
+                        className="text-gray-500 hover:text-gray-700 transition-colors duration-200"
+                      >
+                        {b.name || ""}
+                      </Link>
+                      <svg
+                        fill="currentColor"
+                        width={16}
+                        height={20}
+                        viewBox="0 0 16 20"
+                        aria-hidden="true"
+                        className="h-5 w-4 text-gray-300 mx-2"
+                      >
+                        <path d="M5.697 4.34L8.98 16.532h1.327L7.025 4.341H5.697z" />
+                      </svg>
+                    </li>
+                  ))}
+                  <li className="text-sm">
+                    <span className="font-medium text-gray-500">
+                      {product.title}
+                    </span>
+                  </li>
+                </ol>
+              </nav>
 
-              <form className="mt-10">
-                {/* Sizes */}
-                <div className="mt-10">
-                  <div className="flex items-center justify-between">
-                    <h3 className="text-sm font-medium text-gray-900">Size</h3>
-                    <a
-                      href="#"
-                      className="text-sm font-medium text-primary hover:text-indigo-500"
-                    >
-                      Guia de tamanhos
-                    </a>
-                  </div>
+              {/* Product Details */}
+              <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                  {/* Image Gallery */}
+                  <div className="space-y-4">
+                    <div className="aspect-square overflow-hidden rounded-2xl bg-gray-100">
+                      <img
+                        alt={product.description}
+                        src={product.images[selectedImage] || product.images[0]}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
 
-                  <fieldset aria-label="Choose a size" className="mt-4">
-                    <RadioGroup
-                      value={selectedSize}
-                      onChange={setSelectedSize}
-                      className="grid grid-cols-4 gap-4 sm:grid-cols-8 lg:grid-cols-4"
-                    >
-                      {sizes.map((size, index) => (
-                        <Radio
-                          key={index}
-                          value={size}
-                          className={classNames(
-                            size
-                              ? "cursor-pointer bg-white text-gray-900 shadow-xs"
-                              : "cursor-not-allowed bg-gray-50 text-gray-200",
-                            "group relative flex items-center justify-center rounded-md border px-4 py-3 text-sm font-medium uppercase hover:bg-gray-50 focus:outline-hidden data-focus:ring-2 data-focus:ring-indigo-500 sm:flex-1 sm:py-6"
-                          )}
-                        >
-                          <span>{size}</span>
-                          {size ? (
-                            <span
-                              aria-hidden="true"
-                              className="pointer-events-none absolute -inset-px rounded-md border-2 border-transparent group-data-checked:border-indigo-500 group-data-focus:border"
+                    {/* Thumbnail Gallery */}
+                    {product.images.length > 1 && (
+                      <div className="grid grid-cols-4 gap-4">
+                        {product.images.map((image, index) => (
+                          <button
+                            key={index}
+                            onClick={() => setSelectedImage(index)}
+                            className={`aspect-square overflow-hidden rounded-lg ${
+                              selectedImage === index
+                                ? "ring-2 ring-red-500"
+                                : "hover:ring-2 hover:ring-gray-300"
+                            } transition-all duration-200`}
+                          >
+                            <img
+                              alt={product.description}
+                              src={image}
+                              className="w-full h-full object-cover"
                             />
-                          ) : (
-                            <span
-                              aria-hidden="true"
-                              className="pointer-events-none absolute -inset-px rounded-md border-2 border-gray-200"
-                            >
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Product Info */}
+                  <div className="space-y-6">
+                    <div>
+                      <h1 className="text-3xl font-bold text-gray-900 mb-2">
+                        {product.title}
+                      </h1>
+                      <p className="text-lg text-gray-600 mb-4">
+                        {product.category.name}
+                      </p>
+                      <div className="flex items-center space-x-4">
+                        <div className="flex items-center">
+                          <div className="flex text-yellow-400">
+                            {[...Array(5)].map((_, i) => (
                               <svg
-                                stroke="currentColor"
-                                viewBox="0 0 100 100"
-                                preserveAspectRatio="none"
-                                className="absolute inset-0 size-full stroke-2 text-gray-200"
+                                key={i}
+                                className="w-5 h-5 fill-current"
+                                viewBox="0 0 20 20"
                               >
-                                <line
-                                  x1={0}
-                                  x2={100}
-                                  y1={100}
-                                  y2={0}
-                                  vectorEffect="non-scaling-stroke"
-                                />
+                                <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z" />
                               </svg>
-                            </span>
-                          )}
-                        </Radio>
-                      ))}
-                    </RadioGroup>
-                  </fieldset>
-                </div>
+                            ))}
+                          </div>
+                          <span className="ml-2 text-sm text-gray-600">
+                            (4.5) • 128 avaliações
+                          </span>
+                        </div>
+                      </div>
+                    </div>
 
-                <span
-                  onClick={() => addToCart(product)}
-                  className="cursor-pointer mt-10 flex w-full items-center justify-center rounded-md border border-transparent bg-primary px-8 py-3 text-base font-medium text-white hover:bg-indigo-700 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:outline-hidden"
-                >
-                  Adicionar ao carrinho
-                </span>
-              </form>
-            </div>
+                    <div className="border-t border-gray-200 pt-6">
+                      <div className="flex items-baseline space-x-2">
+                        <span className="text-4xl font-bold text-gray-900">
+                          R$ {product.price}
+                        </span>
+                        <span className="text-lg text-gray-500 line-through">
+                          R$ {(product.price * 1.2).toFixed(2)}
+                        </span>
+                        <span className="bg-red-100 text-red-800 text-sm font-medium px-2.5 py-0.5 rounded-full">
+                          -17%
+                        </span>
+                      </div>
+                      <p className="text-sm text-gray-600 mt-2">
+                        Em até 12x sem juros no cartão
+                      </p>
+                    </div>
 
-            <div className="py-10 lg:col-span-2 lg:col-start-1 lg:border-r lg:border-gray-200 lg:pt-6 lg:pr-8 lg:pb-16">
-              {/* Description and details */}
-              <div>
-                <h3 className="sr-only">Descrição</h3>
+                    {/* Size Selection */}
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between">
+                        <h3 className="text-lg font-medium text-gray-900">
+                          Tamanho
+                        </h3>
+                        <a
+                          href="#"
+                          className="text-sm font-medium text-red-600 hover:text-red-500 transition-colors duration-200"
+                        >
+                          Guia de tamanhos
+                        </a>
+                      </div>
 
-                <div className="space-y-6">
-                  <p className="text-base text-gray-900">
-                    {product.description}
-                  </p>
+                      <RadioGroup
+                        value={selectedSize}
+                        onChange={setSelectedSize}
+                        className="grid grid-cols-3 gap-4"
+                      >
+                        {sizes.map((size) => (
+                          <Radio
+                            key={size}
+                            value={size}
+                            className={({ checked }) =>
+                              classNames(
+                                checked
+                                  ? "border-red-500 bg-red-50 text-red-900"
+                                  : "border-gray-300 bg-white text-gray-900 hover:bg-gray-50",
+                                "flex items-center justify-center rounded-lg border px-4 py-3 text-sm font-medium uppercase cursor-pointer transition-colors duration-200"
+                              )
+                            }
+                          >
+                            {size}
+                          </Radio>
+                        ))}
+                      </RadioGroup>
+                    </div>
+
+                    {/* Add to Cart */}
+                    <div className="space-y-4">
+                      <button
+                        onClick={() => addToCart(product)}
+                        className="w-full btn-primary flex items-center justify-center space-x-2 py-4 px-6 text-lg font-medium rounded-lg"
+                      >
+                        <svg
+                          className="w-6 h-6"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5 5m6-5v6a2 2 0 01-2 2H9a2 2 0 01-2-2v-6m8 0V9a2 2 0 00-2-2H9a2 2 0 00-2 2v4.01"
+                          />
+                        </svg>
+                        <span>Adicionar ao Carrinho</span>
+                      </button>
+
+                      <button className="w-full flex items-center justify-center space-x-2 py-4 px-6 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors duration-200">
+                        <svg
+                          className="w-6 h-6"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                          />
+                        </svg>
+                        <span>Adicionar aos Favoritos</span>
+                      </button>
+                    </div>
+
+                    {/* Product Description */}
+                    <div className="border-t border-gray-200 pt-6">
+                      <h3 className="text-lg font-medium text-gray-900 mb-4">
+                        Descrição
+                      </h3>
+                      <p className="text-gray-600 leading-relaxed">
+                        {product.description}
+                      </p>
+                    </div>
+
+                    {/* Features */}
+                    <div className="border-t border-gray-200 pt-6">
+                      <h3 className="text-lg font-medium text-gray-900 mb-4">
+                        Características
+                      </h3>
+                      <ul className="space-y-2 text-sm text-gray-600">
+                        <li className="flex items-center">
+                          <svg
+                            className="w-4 h-4 text-green-500 mr-2"
+                            fill="currentColor"
+                            viewBox="0 0 20 20"
+                          >
+                            <path
+                              fillRule="evenodd"
+                              d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                              clipRule="evenodd"
+                            />
+                          </svg>
+                          Material de alta qualidade
+                        </li>
+                        <li className="flex items-center">
+                          <svg
+                            className="w-4 h-4 text-green-500 mr-2"
+                            fill="currentColor"
+                            viewBox="0 0 20 20"
+                          >
+                            <path
+                              fillRule="evenodd"
+                              d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                              clipRule="evenodd"
+                            />
+                          </svg>
+                          Garantia de 1 ano
+                        </li>
+                        <li className="flex items-center">
+                          <svg
+                            className="w-4 h-4 text-green-500 mr-2"
+                            fill="currentColor"
+                            viewBox="0 0 20 20"
+                          >
+                            <path
+                              fillRule="evenodd"
+                              d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                              clipRule="evenodd"
+                            />
+                          </svg>
+                          Frete grátis para todo o Brasil
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-      </div>
-      <footer className="py-6 row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <Footer />
-      </footer>
-    </Toast>
+        </main>
+
+        <footer>
+          <Footer />
+        </footer>
+      </Toast>
+    </div>
   );
 };
 
