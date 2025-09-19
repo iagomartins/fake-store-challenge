@@ -223,10 +223,18 @@ const Header: React.FC<Props> = ({ emitCategory, showMenu }) => {
               <div className="ml-auto flex items-center space-x-4">
                 {/* User menu */}
                 <div className="hidden lg:flex lg:items-center lg:space-x-2">
-                  <button className="p-2 text-gray-400 hover:text-gray-500 transition-colors duration-200">
+                  <button
+                    title="User"
+                    type="button"
+                    className="p-2 text-gray-400 hover:text-gray-500 transition-colors duration-200"
+                  >
                     <FontAwesomeIcon icon={faUser} className="w-5 h-5" />
                   </button>
-                  <button className="p-2 text-gray-400 hover:text-gray-500 transition-colors duration-200">
+                  <button
+                    title="Wishlist"
+                    type="button"
+                    className="p-2 text-gray-400 hover:text-gray-500 transition-colors duration-200"
+                  >
                     <FontAwesomeIcon icon={faHeart} className="w-5 h-5" />
                   </button>
                 </div>
